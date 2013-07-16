@@ -170,5 +170,75 @@
 <script type="text/javascript" src="scripts/mon_funcs2.js"></script>
 <script type="text/javascript" src="scripts/steelseries.js"></script>
 <script type="text/javascript" src="scripts/tween.js"></script>
+<script type="text/javascript">
+
+// add bypass for console logging in IE to prevent JS errors
+if ( ! window.console ) console = { log: function(){} };
+// API Global variables	
+var tst_status = ""; 		// test status
+var tst_type = "";	// test type
+var sRowColor = "";
+var sRow = "";
+var sFontSize = "";
+var sImage = "";
+var sLTDSW = "";
+var sLTDSD = "";
+var sKpi = "";
+var sSpeedKpi = "";
+var kpi_diff = 0;
+var iNoofMonitorsInError = 0;
+var sNoofMonitorsInError = "";
+var countOK = 0;
+var countProblem = 0;
+var countWarning = 0;
+var countDown = 0;
+var summary = "";
+var RBEstatus = new Boolean();
+var obstext = "";
+var aResultCodes = new Array();
+
+// jquery function to get the XML data when timer requests it, on document load and at defined intervals
+$(document).ready(function()
+{
+	function getData(){
+	  $.ajax({
+		type: "GET",
+		url: "api_getxml2.php",
+		//url: "apidata.xml",
+		dataType: "xml",
+		success: parseXml,
+		error: function (xhr, ajaxOptions, thrownError)
+			{
+				console.log ("xml poll error");
+				activeled_ss.blink(true);
+				activeled_ss.setLedColor(steelseries.LedColor.RED_LED);
+			}
+		});
+		
+	} // end function getData
+
+	function refresh_timer(){
+		//console.log('function refresh_timer called');
+		setTimeout(refresh_timer, 300000);	// 300000 miliseconds = 5 minutes, change this value to change update frequency
+		getData();
+	} // end function refresh_timer
+
+	
+	//-----------------------
+	// initiate the clock and set timer for every second
+	updateClock();
+	myCounter = setInterval(function () {
+		updateClock();
+	}, 1000);
+	
+	// initiate the timer to refresh the xml data
+	refresh_timer();
+	
+	// load once the SC result codes from XML document ResultCodes.xml
+	readRClabels();
+}); // end main line API JavaScript
+
+
+</script>
 </body>
 </html>
