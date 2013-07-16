@@ -1,0 +1,195 @@
+@charset "utf-8";
+/* CSS Document */
+
+#wrapper {
+	width: auto;
+	margin: auto auto;
+}
+#content {
+
+}
+body {
+	background-color:#231f20;
+	color: #FFF;
+}
+#logos {
+	text-align: center;
+	background-color:#FFF;
+}
+#ph_plot1 {
+	position: absolute;
+	left: 50px;
+	width:95%;
+	height:50%;
+	margin: auto auto 20px auto;
+}
+
+.axisLabel {
+	text-align: center;
+	font-size: 70%;
+}
+
+
+.yaxisLabel {
+	position: absolute;
+	top: 70%;
+	left: -20px;
+	transform: rotate(-90deg);
+	-o-transform: rotate(-90deg);
+	-ms-transform: rotate(-90deg);
+	-moz-transform: rotate(-90deg);
+	-webkit-transform:  rotate(-90deg);
+	transform-origin: 0 0;
+	-o-transform-origin: 0 0;
+	-ms-transform-origin: 0 0;
+	-moz-transform-origin: 0 0;
+	-webkit-transform-origin: 0 0;
+}
+
+.ie7 .yaxisLabel, .ie8 .yaxisLabel {
+	top: 40%;
+	font-size: 36px;
+	filter: progid:DXImageTransform.Microsoft.Matrix(M11=0.0, M12=0.33, M21=-0.33, M22=0.0,sizingMethod='auto expand');
+}
+
+#lg_plot1 {
+	font-size: 80%;
+}
+#lg_winddir {
+	font-size: 50%;
+}
+td.legendLabel {
+	color: #111111;
+}
+
+h1,h2,h3{
+	text-align:center;
+	padding: 5px;
+	margin: 0px;
+}
+
+/* ~~ The footer ~~ */
+#footer {
+	padding-bottom: 0em;
+	left: 0;
+	height: 1.3em;
+	border: 2px  solid #666;
+	font-size: 90%;
+	background: #111;
+	text-align: center;
+	color: #FFFFFF;
+	padding-left: 20px;
+}
+
+table td, table th {
+	padding: 5px;
+}
+
+#table {display: table;
+	width: 100%;
+	table-layout:fixed;
+	border: 1px;
+	text-align:center;
+	vertical-align:middle;
+}
+table tr{
+	vertical-align:middle;
+}
+#table_status {
+	display: table;
+	width: 75%;
+	border-collapse: collapse;
+	table-layout:fixed;
+	font-size: 200%;
+	text-align: center;
+	padding: 5px 10px 10px 5px;
+	margin-left:auto;
+	margin-right:auto;
+}
+#table_avgs {
+	display: table;
+	width: 90%;
+	border-collapse: collapse;
+	table-layout:fixed;
+	text-align:center;
+	padding: 5px;
+	margin-left:auto;
+	margin-right:auto;
+}
+#table_errors {
+	display: table;
+	width:90%;
+	border-collapse: collapse;
+	table-layout:fixed;
+	text-align:center;
+	padding: 5px;
+	margin-left:auto;
+	margin-right:auto;
+}
+#table_summary {
+	display: table;
+	width: 25%;
+	border-collapse: collapse;
+	table-layout:fixed;
+	text-align:center;
+	padding: 5px;
+	margin-left:auto;
+	margin-right:auto;
+}
+#table_status td, #table_summary td {
+		border: 2px  ridge #066;
+}
+.heading {
+	font-size: 200%;
+	text-align: center;
+	color:#FFFFFF;
+}
+.right{
+	text-align: right;
+}
+.left{
+	text-align: left;
+}
+.center {
+	text-align:center;
+}
+img {
+	vertical-align:middle;
+	padding-right: 20px;
+}
+.green
+{
+	background-color: #00FF00;
+	color: #000;
+}
+.red
+{
+	background-color: #FF0000;
+	color: #000;
+}
+.amber
+{
+	background-color: #FF9900;
+	color: #000;
+}
+.black
+{
+	background-color: #000000;
+	color: #FFFFFF;
+}
+.blue
+{
+	background-color: #000088;
+	color: #FFFFFF;
+}
+.big
+{
+	font-size:280%;
+}
+.med
+{
+	font-size:180%;
+}
+.vm {
+	vertical-align:middle;
+}

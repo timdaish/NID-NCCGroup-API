@@ -1,0 +1,272 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<codes>
+  <code>
+    <id>0</id>
+    <severity>OK</severity>
+    <description>Test in progress</description>  </code>
+  <code>
+    <id>1</id>
+    <severity>OK</severity>
+    <description>Site OK</description>  </code>
+  <code>
+    <id>2</id>
+    <severity>Warning</severity>
+    <description>No Connection To Server For Object</description>  </code>
+  <code>
+    <id>3</id>
+    <severity>Warning</severity>
+    <description>Missing Object</description>  </code>
+  <code>
+    <id>4</id>
+    <severity>Down</severity>
+    <description>Page Access Denied</description>  </code>
+  <code>
+    <id>5</id>
+    <severity>Problem</severity>
+    <description>Web Page Download Timed Out</description>  </code>
+  <code>
+    <id>6</id>
+    <severity>Down</severity>
+    <description>Web Page Server Error</description>  </code>
+  <code>
+    <id>7</id>
+    <severity>Down</severity>
+    <description>Unknown Web Page Error</description>  </code>
+  <code>
+    <id>8</id>
+    <severity>Problem</severity>
+    <description>Bad HTTP Headers</description>  </code>
+  <code>
+    <id>9</id>
+    <severity>Problem</severity>
+    <description>Obscene Word</description>  </code>
+  <code>
+    <id>10</id>
+    <severity>Problem</severity>
+    <description>Could Not Connect To Web Server</description>  </code>
+  <code>
+    <id>11</id>
+    <severity>Warning</severity>
+    <description>Object Download Timed Out</description>  </code>
+  <code>
+    <id>12</id>
+    <severity>Warning</severity>
+    <description>Access To Object Denied</description>  </code>
+  <code>
+    <id>13</id>
+    <severity>Warning</severity>
+    <description>Object Server Error</description>  </code>
+  <code>
+    <id>14</id>
+    <severity>Warning</severity>
+    <description>Bad Object Headers</description>  </code>
+  <code>
+    <id>15</id>
+    <severity>Down</severity>
+    <description>Web Page Download Failed</description>  </code>
+  <code>
+    <id>16</id>
+    <severity>Down</severity>
+    <description>DNS Error</description>  </code>
+  <code>
+    <id>17</id>
+    <severity>Warning</severity>
+    <description>Object DNS Failure</description>  </code>
+  <code>
+    <id>18</id>
+    <severity>Problem</severity>
+    <description>Server Closed Connection</description>  </code>
+  <code>
+    <id>19</id>
+    <severity>Warning</severity>
+    <description>Server Closed Connection On Object</description>  </code>
+  <code>
+    <id>20</id>
+    <severity>Down</severity>
+    <description>Application Content Error</description>  </code>
+  <code>
+    <id>21</id>
+    <severity>Down</severity>
+    <description>SiteCon Error Found</description>  </code>
+  <code>
+    <id>22</id>
+    <severity>Problem</severity>
+    <description>No HTML</description>  </code>
+  <code>
+    <id>23</id>
+    <severity>Problem</severity>
+    <description>Expected Phrase Not Found</description>  </code>
+  <code>
+    <id>24</id>
+    <severity>Problem</severity>
+    <description>Page Size Too Small</description>  </code>
+  <code>
+    <id>25</id>
+    <severity>Problem</severity>
+    <description>Page Size Too Large</description>  </code>
+  <code>
+    <id>26</id>
+    <severity>Problem</severity>
+    <description>Redirect Expired</description>  </code>
+  <code>
+    <id>27</id>
+    <severity>Warning</severity>
+    <description>Redirect Expired On Component</description>  </code>
+  <code>
+    <id>28</id>
+    <severity>Warning</severity>
+    <description>Web Server Connection Failed For Object</description>  </code>
+  <code>
+    <id>29</id>
+    <severity>Warning</severity>
+    <description>No Content For An Object</description>  </code>
+  <code>
+    <id>30</id>
+    <severity>Problem</severity>
+    <description>Customer Specific Script Error</description>  </code>
+  <code>
+    <id>31</id>
+    <severity>Problem</severity>
+    <description>Customer Specific Phrase Found</description>  </code>
+  <code>
+    <id>32</id>
+    <severity>Problem</severity>
+    <description>Customer Specific Maintenance Page</description>  </code>
+  <code>
+    <id>33</id>
+    <severity>Problem</severity>
+    <description>Customer Specific Error Page</description>  </code>
+  <code>
+    <id>34</id>
+    <severity>Problem</severity>
+    <description>Customer Specific Search Result Time-Out</description>  </code>
+  <code>
+    <id>35</id>
+    <severity>Down</severity>
+    <description>Customer Specific Login Failure</description>  </code>
+  <code>
+    <id>36</id>
+    <severity>Down</severity>
+    <description>Customer Specific ODBC Error</description>  </code>
+  <code>
+    <id>40</id>
+    <severity>OK</severity>
+    <description>Dummy Page Test</description>  </code>
+  <code>
+    <id>41</id>
+    <severity>Down</severity>
+    <description>DNS Timeout</description>  </code>
+  <code>
+    <id>42</id>
+    <severity>Warning</severity>
+    <description>Object DNS Timeout</description>  </code>
+  <code>
+    <id>43</id>
+    <severity>Down</severity>
+    <description>Web Server Refused Connection</description>  </code>
+  <code>
+    <id>44</id>
+    <severity>Warning</severity>
+    <description>Web Server Refused Connection For Object</description>  </code>
+  <code>
+    <id>45</id>
+    <severity>Problem</severity>
+    <description>Data Start Threshold Exceeded</description>  </code>
+  <code>
+    <id>46</id>
+    <severity>Warning</severity>
+    <description>Data Start Threshold Exceeded For Object</description>  </code>
+  <code>
+    <id>47</id>
+    <severity>Problem</severity>
+    <description>Could Not Write Request</description>  </code>
+  <code>
+    <id>48</id>
+    <severity>Warning</severity>
+    <description>Could Not Write Request For Object</description>  </code>
+  <code>
+    <id>49</id>
+    <severity>Problem</severity>
+    <description>Number of missing objects reached.</description>  </code>
+  <code>
+    <id>100</id>
+    <description>-</description>
+    <description>Network Backbone Outage</description>
+  </code>
+  <code>
+    <id>101</id>
+    <description>-</description>
+    <description>Site Confidence Null Result</description>
+  </code>
+  <code>
+    <id>102</id>
+    <description>-</description>
+    <description>Customer Null Test</description>
+  </code>
+  <code>
+    <id>103</id>
+    <description>-</description>
+    <description>Script Failure</description>
+  </code>
+  <code>
+    <id>104</id>
+    <description>-</description>
+    <description>JavaScript Execution Timeout Exceeded</description>
+  </code>
+  <code>
+    <id>250</id>
+    <severity>Problem</severity>
+    <description>XML Validation Syntax Error</description>  </code>
+  <code>
+    <id>251</id>
+    <severity>Problem</severity>
+    <description>XML Schema/DTD check failed</description>  </code>
+  <code>
+    <id>252</id>
+    <severity>Problem</severity>
+    <description>XML check failed</description>  </code>
+  <code>
+    <id>253</id>
+    <severity>Problem</severity>
+    <description>JSON Validation Syntax Error</description>  </code>
+  <code>
+    <id>260</id>
+    <severity>Warning</severity>
+    <description>SSL Certificate Error</description>  </code>
+  <code>
+    <id>261</id>
+    <severity>Warning</severity>
+    <description>SSL Certificate Error For Object</description>  </code>
+  <code>
+    <id>262</id>
+    <severity>Warning</severity>
+    <description>SSL Certificate Time Error</description>  </code>
+  <code>
+    <id>263</id>
+    <severity>Warning</severity>
+    <description>SSL Certificate Time Error For Object</description>  </code>
+  <code>
+    <id>264</id>
+    <severity>Warning</severity>
+    <description>SSL Certificate Verification Error</description>  </code>
+  <code>
+    <id>265</id>
+    <severity>Warning</severity>
+    <description>SSL Certificate Verification Error For Object</description>  </code>
+  <code>
+    <id>266</id>
+    <severity>Warning</severity>
+    <description>SSL Certificate Unknown Error</description>  </code>
+  <code>
+    <id>267</id>
+    <severity>Warning</severity>
+    <description>SSL Certificate Unknown Error for Object</description>  </code>
+  <code>
+    <id>270</id>
+    <severity>Problem</severity>
+    <description>NTLM authentication error</description>  </code>
+  <code>
+    <id>271</id>
+    <severity>Problem</severity>
+    <description>Specified Phrase Found</description>  </code>
+</codes>
