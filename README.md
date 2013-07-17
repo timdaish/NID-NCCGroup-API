@@ -37,6 +37,8 @@ Operation instructions:
 - click "Get accounts"
 - select 1 or more accounts from the listbox
 - click "Get data"
+- optionally select the RBE filter to Report by Exception (hides monitors in OK status)
+- use window zoom to best present display
 
 Browsers:
 - Google Chrome
@@ -46,6 +48,24 @@ Browsers:
 Notes:
 - XML data is pulled back from the API by PHP pages using cURL
 - each API call will count against your daily API call allowance
-- these pages should only be used if you have not already developed a solution to pull bacj API data
+- these pages should only be used if you have not already developed a solution to pull back API data
 - you may replace the call to the PHP page with the name of an already retrieved XML page if required
 - refresh is set a default of 5 mins (300000 milleseconds) to align with the default user's allowance of 300 API calls per day
+
+
+Copyright (c) 2013 Tim Daish BA(Hons) MBCS CTAL-TM
+
+    Permission is hereby granted, free of charge, to any person obtaining
+    a copy of this software and associated documentation files (the "Software")
+    the rights to use, copy, modify, merge, publish and distribute copies of the Software,
+    and to permit persons to whom the Software is furnished to do so.
+    The Software may not be sold or rented. Modification is encouraged to meet individual needs.
+    Support from the Author will only be provided against the original Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+    OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+    IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+    CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+    TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+    OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
