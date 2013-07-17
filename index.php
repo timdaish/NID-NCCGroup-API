@@ -37,7 +37,7 @@
               Error Feed - generic
             </ul>
             <ul>
-              <li><a href="api_login2.htm" target="_blank">API Monitor Generic</a></li>
+              <li><a href="api_login.htm" target="_blank">API Monitor Generic</a></li>
               NCC Group Monitor - generic
             </ul>
 

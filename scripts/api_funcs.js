@@ -1,17 +1,80 @@
-/* mon_funcs2.js
+/* api_funcs.js
 //
-// Release: v2.0 July 2013
+// Release: v1.0 July 2013
 //
 // Author: Tim Daish BA(Hons) MBCS CTAL-TM
 //         Technical Consultant, NCC Group Web Performance
 //
-// Function Library for demo pages for API and Error Feeds in XML formats
+// Function Library for demo pages for API in XML format
 //
 */
 
-//
-// COMMON FUNCTIONS
-//
+
+// add bypass for console logging in IE to prevent JS errors
+if ( ! window.console ) console = { log: function(){} };
+// API Global variables	
+var tst_status = ""; 		// test status
+var tst_type = "";	// test type
+var sRowColor = "";
+var sRow = "";
+var sFontSize = "";
+var sImage = "";
+var sLTDSW = "";
+var sLTDSD = "";
+var sKpi = "";
+var sSpeedKpi = "";
+var kpi_diff = 0;
+var iNoofMonitorsInError = 0;
+var sNoofMonitorsInError = "";
+var countOK = 0;
+var countProblem = 0;
+var countWarning = 0;
+var countDown = 0;
+var summary = "";
+var RBEstatus = new Boolean();
+var obstext = "";
+var aResultCodes = new Array();
+
+// jquery function to get the XML data when timer requests it, on document load and at defined intervals
+$(document).ready(function()
+{
+	function getData(){
+	  $.ajax({
+		type: "GET",
+		url: "api_getxml.php",  // replace this with another XML source if needed
+		//url: "apidata.xml",
+		dataType: "xml",
+		success: parseXml,
+		error: function (xhr, ajaxOptions, thrownError)
+			{
+				console.log ("xml poll error");
+				activeled_ss.blink(true);
+				activeled_ss.setLedColor(steelseries.LedColor.RED_LED);
+			}
+		});
+		
+	} // end function getData
+
+	function refresh_timer(){
+		//console.log('function refresh_timer called');
+		setTimeout(refresh_timer, 300000);	// 300000 miliseconds = 5 minutes, change this value to change update frequency
+		getData();
+	} // end function refresh_timer
+
+	
+	//-----------------------
+	// initiate the clock and set timer for every second
+	updateClock();
+	myCounter = setInterval(function () {
+		updateClock();
+	}, 1000);
+	
+	// initiate the timer to refresh the xml data
+	refresh_timer();
+	
+	// load once the SC result codes from XML document ResultCodes.xml
+	readRClabels();
+}); // end main line API JavaScript
 
 
 // function to update the clock every second
@@ -641,303 +704,3 @@ function parseXml(xml) {
 	 
 		 
 } // end function parseXml
-
-
-//
-// RSS ERROR FEED FUNCTIONS
-//
-
-// Our callback function, for when a feed is loaded.
-function feedLoaded(result) {
-	var d=new Date();
-	var n=d.toLocaleTimeString();
-	//console.log("feed loaded --> reading xml @ " + n);
-	
-	
-	// clear down table
-	$("#table#table tbody").empty();
-			
-	if (!result.error) 
-	{
-		// Get and clear our content div.
-		var content = document.getElementById('content');
-		content.innerHTML = '';
-	
-	   // Loop through our items
-		var channel = $('channel', result).eq(0);
-		var items = [];		
-		$('item', result).each( function()
-		{
-			var item = {};
-		
-			item.title = $(this).find('title').eq(0).text();
-			item.link = $(this).find('link').eq(0).text();
-			item.description = $(this).find('description').eq(0).text();
-			item.updated = $(this).find('pubDate').eq(0).text();
-			item.id = $(this).find('guid').eq(0).text();
-			items.push(item);
-	
-		 });  // end each loop to populate items array
-	
-		// items array holds all details
-		//console.dir(items);
-	
-		var iErrorCountOpen = 0;
-		var iErrorCountClosed = 0;
-	
-		// loop through the array to look for each item
-		$('item', result).each( function()
-		{
-			var item = {};
-			
-			// break XML RSS item down by attribute
-			item.title = $(this).find('title').eq(0).text();
-			item.link = $(this).find('link').eq(0).text();
-			item.description = $(this).find('description').eq(0).text();
-			item.updated = $(this).find('pubDate').eq(0).text();
-			item.id = $(this).find('guid').eq(0).text();
-			
-			var str=item.title;
-			var n=str.search("Open:");
-			
-			// check if the error is denoted as being open
-			if (n > 0)
-			{
-				// open error found
-				iErrorCountOpen = iErrorCountOpen + 1;
-			
-				// title
-				// break title down
-				var itemerrno = item.title.substring(0,n-1);
-				
-				// extract name of site and the title
-				var f=str.search(" for ");
-				var itemerrsite = item.title.substring(f+4);
-				var itemerrtitle = item.title.substring(n+6,f);
-				
-				// break description down and extract the error code
-				var rc1=item.description.indexOf("result code") - 1;
-				var desc_s = item.description.substring(rc1);
-				var rc2= desc_s.indexOf(".");
-				var itemrc = desc_s.substring(12,rc2-1); // remove brackets
-			   
-				//console.log("desc = " + item.description);
-				//console.log("desc_s = " + desc_s);
-				//console.log("rc1 = " + rc1);
-				//console.log("rc2 = " + rc2);
-				//console.log("rc = " + itemrc);
-
-				// prep variables
-				sRowColor = "open";
-				sFontSize = "med";
-		
-				var errorduration = "";
-				var errortimeopen= item.updated;
-				var errortimeclosed = "";
-				var itemstatus = "Open";
-				var errorisclosed = new Boolean();
-				
-				//console.log ("item:" + i);
-				//console.log (items[i]);
-				
-				// look for a corresponding close error item for an open error item
-				for (var j=0;j<items.length; j++) 
-				{
-					// get error title
-					errtitle = (items[j].title);
-					
-					// compare the open error number against that of the closed error
-					//console.log("checking: " + errtitle);
-					var p = errtitle.indexOf(itemerrno)
-					if (p == 0)
-					{
-						// error numbers match - a close error item has been found for the open error
-						//console.log("record match found for: " + itemerrno);
-						if ( errtitle.indexOf("Closed") > 0)
-						{
-							errorisclosed = true;
-							//console.log("CLOSED match found for: " + itemerrno);
-							iErrorCountClosed = iErrorCountClosed + 1;
-							break;
-						}
-					}  // end if this is a closed error item
-					
-				}  // end for loop looking for a closed record
-				
-				// declare variables to calculate error duration 
-				var sDates = "";
-				var sDtOpen = ""
-				var sDtClosed = ""
-				var dt_Open = new Date();
-				var dt_Closed = new Date();
-				
-				// adjust errortimeopen values for localtime - expressed in Feed as GMT						
-				dt_Open = Date.parse(errortimeopen) + currentTimeZoneOffsetInHours;
-				var sDtOpen = dateFormat(dt_Open, "isoDateTime");
-				sDates = sDtOpen;
-				
-				// save the latest error open date away for use later if it's later than the one held
-				if (dt_Open > dt_LastOpen)
-				{
-					dt_LastOpen = dt_Open;
-					//console.log (" new error last open datetime set: " + dt_LastOpen);
-					//console.log ("dt_LastOpen: " + dt_LastOpen + "; dt_Open: " + dt_Open );
-				}
-				//console.log ("dt_LastOpen: " + dt_LastOpen + "; dt_Open: " + dt_Open );	
-				
-				// append the error row to the table, different colours and info. for closed and open errors
-				if (errorisclosed == true)
-				{
-					// display a closed error
-					sRowColor = "closed";
-					itemstatus = "Closed";
-					errorduration = "tbc";
-					
-					// calculate time different betweeb error open time and error close time
-					errortimeclosed = (items[j].updated);
-					// adjust errortimeclosed values for localtime - expressed in Feed as GMT
-
-					dt_Closed = Date.parse(errortimeclosed) + currentTimeZoneOffsetInHours;
-					errorduration = Math.abs(dt_Closed - dt_Open); // difference
-					sDtClosed = dateFormat(dt_Closed, "isoDateTime");
-					
-					var diff=dt_Closed-dt_Open,sign=diff<0?-1:1,milliseconds,seconds,minutes,hours,days;
-					diff/=sign; // or diff=Math.abs(diff);
-					diff=(diff-(milliseconds=diff%1000))/1000;
-					diff=(diff-(seconds=diff%60))/60;
-					diff=(diff-(minutes=diff%60))/60;
-					days=(diff-(hours=diff%24))/24;
-
-					//console.info(sign===1?"Elapsed: ":"Remains: ",
-					//			 days+" days, ",
-					//			 hours+" hours, ",
-					//			 minutes+" minutes, ",
-					//			 seconds+" seconds, ",
-					//			 milliseconds+" milliseconds.");
-					
-					var sDays = " day ";
-					if (days == 0)
-					{
-						//errorduration = hours+" hrs, " + minutes+" mins, " + seconds+" secs";								
-						errorduration = hours +"h " + minutes+"m " + seconds+"s";	
-					}
-					else
-					{
-						//errorduration = days+sDays + hours+" hrs, " + minutes+" mins, " + seconds+" secs";								
-						errorduration = days+ "d " + hours+"h " + minutes+"m " + seconds+ "s";	
-					}
-					
-					sDates = sDates + "<br>" + sDtClosed;							
-				}
-				else
-				{
-					// display an open error
-					
-					// calculate how long the error has been open
-					var dt_now = new Date();
-					var diff=dt_now-dt_Open,sign=diff<0?-1:1,milliseconds,seconds,minutes,hours,days;
-					diff/=sign; // or diff=Math.abs(diff);
-					diff=(diff-(milliseconds=diff%1000))/1000;
-					diff=(diff-(seconds=diff%60))/60;
-					diff=(diff-(minutes=diff%60))/60;
-					days=(diff-(hours=diff%24))/24;
-				
-					var sDays = "d ";
-					if (days == 0)
-					{
-						//errorduration = hours+" hrs, " + minutes+" mins, " + seconds+" secs";								
-						errorduration = hours +"h " + minutes+"m " + seconds + "s";	
-					}
-					else
-					{
-						//errorduration = days+sDays + hours+" hrs, " + minutes+" mins, " + seconds+" secs";								
-						errorduration = days+"d " + hours+"h " + minutes+"m " + seconds + "s";	
-					}
-					
-					sDates = sDates;	
-				
-				}  // if error is closed or still open
-		
-				//console.log("matching upon: " + itemerrno + " = " + errorisclosed);	 
-				if ((iErrorCountOpen - iErrorCountClosed > 0 && RBEstatus == true) || (RBEstatus == false))
-				{
-					// write out the table row
-					var sRow = "<tr class=\"" + sRowColor + "\">"
-					 + "<td width=\"8%\"class=\"" + sFontSize + " left\">" + itemerrno + "</td>"
-					 + "<td width=\"30%\"class=\"" + sFontSize + " left\">" + itemerrsite + "</td>"
-					 + "<td class=\"" + sFontSize + " right\">" + itemerrtitle + "</td>"
-					 + "<td class=\"" + sFontSize + " right\"> " + itemrc + "</td>"
-					 + "<td class=\"" + "" + "\">" + sDates + "</td>"
-					 + "<td class=\"" + "" + "\" right>" + itemstatus + "</td>"
-					 + "<td class=\"" + "" + "\" right>" + errorduration + "</td>"
-					 + "</tr>";
-		
-					if (RBEstatus == false || (RBEstatus == true && itemstatus != "Closed"))
-					{
-						$("table#table tbody").append(sRow);	
-					}					
-				
-				}
-				else
-				{
-
-				}
-			}  // end if an open error is found
-	
-		 });  // end loop
-		
-		// check if there no open errors; if none, display "no errors" information
-		//console.log("open" + iErrorCountOpen + " - closed: " + iErrorCountClosed);
-		if (iErrorCountOpen - iErrorCountClosed == 0)
-		{
-			sRowColor = "noerrors";
-			var sRow = "<tr class=\"" + sRowColor + "\">"
-			 + "<td width=\"100%\"class=\"" + sFontSize + " center\">"  + "No Recent Open Errors" + "</td>"
-			 + "</tr>";
-			if (RBEstatus == true )
-			{
-				$("table#table tbody").append(sRow);	
-			}
-		
-			// calculate time since last error was raised
-			var dt_now = new Date();
-			var diff=dt_now-dt_LastOpen,sign=diff<0?-1:1,milliseconds,seconds,minutes,hours,days;
-			diff/=sign; // or diff=Math.abs(diff);
-			diff=(diff-(milliseconds=diff%1000))/1000;
-			diff=(diff-(seconds=diff%60))/60;
-			diff=(diff-(minutes=diff%60))/60;
-			days=(diff-(hours=diff%24))/24;
-		
-			var sDays = " day ";
-			if (days == 0)
-			{
-				//errorduration = hours+" hrs, " + minutes+" mins, " + seconds+" secs";								
-				errorduration = hours +"h " + minutes+"m";	
-			}
-			else
-			{
-				if (days > 1)
-				{
-				sDays = " days "
-				}
-				//errorduration = days+sDays + hours+" hrs, " + minutes+" mins, " + seconds+" secs";								
-				errorduration = days+ "d " + hours+"h " + minutes+"m";	
-			}
-			sRow = "<tr class=\"" + "" + "\">"
-			 + "<td width=\"100%\"class=\"" + sFontSize + " center\">"  + "time since last error: " + errorduration + "</td>"
-			 + "</tr>";
-			if (RBEstatus == true )
-			{
-				$("table#table tbody").append(sRow);	
-			}
-		
-		}  // end if no open errors
-		
-	
-	} // end if result
-	else
-	{
-		  console.log("xml load error");
-	}
-	
-} // end function feedLoaded
