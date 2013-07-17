@@ -32,7 +32,7 @@ Installation Pre-Requisites:
 - PHP 5.2+ with PHP cURL installed
 
 Operation instructions:
-- open "api_login2.htm" from the web server location
+- open "api_login.htm" from the web server location
 - enter your NCC Group Portal username and password
 - click "Get accounts"
 - select 1 or more accounts from the listbox
