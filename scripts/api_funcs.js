@@ -258,7 +258,7 @@ function initgauges()
 	gauge4_ss = new steelseries.RadialBargraph(
 					'canvas_ss_gauge4', {
 					gaugeType: steelseries.GaugeType.TYPE3,
-					titleString: "Not OK",                                
+					titleString: "In Error",                                
 					unitString: "%", 
 					threshold: 7,         
 					frameDesign: steelseries.FrameDesign.STEEL,
@@ -294,7 +294,7 @@ function initgauges()
 					frameDesign: steelseries.FrameDesign.STEEL,
 					backgroundColor: steelseries.BackgroundColor.LIGHT_GRAY,
 					gaugeType: steelseries.GaugeType.TYPE5,
-					titleString: "Number of Open Errors",
+					titleString: "Number of Open, High Severity Errors",
 					unitString: "",
 					threshold: 0,
 					minValue: 0,
@@ -657,7 +657,7 @@ function parseXml(xml) {
 	document.getElementById('cntpr').innerHTML = "Problem: " + countProblem.toString();
 	document.getElementById('cntdn').innerHTML = "Down: " + countDown.toString();
 	 
-	// update page severity totals
+	// update page high severity totals
 	iNoofMonitorsInError = countProblem + countDown;
 	sNoofMonitorsInError = iNoofMonitorsInError.toString();
 
@@ -672,7 +672,7 @@ function parseXml(xml) {
 	gauge2max_ss.setValue(aMonitorTimes[1][2]);
 	
 	// calculate percentage of monitors with issues
-	iPctOkMonitors = 100 - countOK/(countOK+ countWarning +countProblem+countDown) * 100;
+	iPctOkMonitors = 100 - countOK/(countOK + countWarning + countProblem + countDown) * 100;
 	iPctKPIMissed = (iMonKPIMissed / (iMonKPIMissed + iMonKPIMet)) * 100;
 	//console.log ("missed: " + String(iMonKPIMissed) + " met: " + String(iMonKPIMet));
 	
