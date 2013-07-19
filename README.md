@@ -29,7 +29,7 @@ Installation instructions:
 - Unzip all files into a web server directory
 
 Installation Pre-Requisites:
-- PHP 5.2+ with PHP cURL installed
+- PHP 5.3+ with PHP cURL installed (PHP v5.2 won't work correctly)
 
 Operation instructions:
 - open "api_login.htm" from the web server location
