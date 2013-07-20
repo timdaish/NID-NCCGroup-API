@@ -16,52 +16,6 @@ body {
 	text-align: center;
 	background-color:#FFF;
 }
-#ph_plot1 {
-	position: absolute;
-	left: 50px;
-	width:95%;
-	height:50%;
-	margin: auto auto 20px auto;
-}
-
-.axisLabel {
-	text-align: center;
-	font-size: 70%;
-}
-
-
-.yaxisLabel {
-	position: absolute;
-	top: 70%;
-	left: -20px;
-	transform: rotate(-90deg);
-	-o-transform: rotate(-90deg);
-	-ms-transform: rotate(-90deg);
-	-moz-transform: rotate(-90deg);
-	-webkit-transform:  rotate(-90deg);
-	transform-origin: 0 0;
-	-o-transform-origin: 0 0;
-	-ms-transform-origin: 0 0;
-	-moz-transform-origin: 0 0;
-	-webkit-transform-origin: 0 0;
-}
-
-.ie7 .yaxisLabel, .ie8 .yaxisLabel {
-	top: 40%;
-	font-size: 36px;
-	filter: progid:DXImageTransform.Microsoft.Matrix(M11=0.0, M12=0.33, M21=-0.33, M22=0.0,sizingMethod='auto expand');
-}
-
-#lg_plot1 {
-	font-size: 80%;
-}
-#lg_winddir {
-	font-size: 50%;
-}
-td.legendLabel {
-	color: #111111;
-}
-
 h1,h2,h3{
 	text-align:center;
 	padding: 5px;
@@ -193,3 +147,65 @@ img {
 .vm {
 	vertical-align:middle;
 }
+
+/* Tablet 1280x800 resolutions */
+@media only screen and (device-width: 800px) and (orientation:portrait) and (orientation: portrait){
+	.big
+	{
+		font-size:100%;
+	}
+	.med
+	{
+		font-size:80%;
+	}
+	#table_avgs, #table_status, #table_errors, #table_summary  {
+		margin: 10px;
+		font-size:100%;
+		width: 100%;
+	}
+}
+@media only screen and (device-width: 1280px) and (orientation:landscape) { 
+	.big
+	{
+		font-size:120%;
+	}
+	.med
+	{
+		font-size:90%;
+	}
+	#table_avgs, #table_status, #table_errors, #table_summary  {
+		font-size:130%;
+		width: 100%;
+	}
+}
+
+/* Tablet 1024x768 resolutions = iPad */
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: portrait) {
+	.big
+	{
+		font-size:100%;
+	}
+	.med
+	{
+		font-size:80%;
+	}
+	#table_avgs, #table_status, #table_errors, #table_summary  {
+		font-size:100%;
+		width: 100%;
+	}
+}
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation:landscape) {	
+	.big
+	{
+		font-size:120%;
+	}
+	.med
+	{
+		font-size:90%;
+	}
+	#table_avgs, #table_status, #table_errors, #table_summary {
+		font-size:130%;
+		width: 100%;
+	}
+}
+
