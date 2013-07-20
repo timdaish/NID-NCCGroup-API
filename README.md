@@ -44,6 +44,9 @@ Browsers:
 - Google Chrome
 - Mozilla Firefox
 - Microsoft Internet Explorer (compatible, but others recommended)
+- Tablets partially supported (media types added):
+    - 1280x800 resolution screens (typical Android tablets)
+    - 1024x768 resolution screens (iPad)
 
 Notes:
 - XML data is pulled back from the API by PHP pages using cURL
