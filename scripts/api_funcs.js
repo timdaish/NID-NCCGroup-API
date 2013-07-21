@@ -13,7 +13,6 @@
 // add bypass for console logging in IE to prevent JS errors
 if ( ! window.console ) console = { log: function(){} };
 // API Global variables	
-var tst_status = ""; 		// test status
 var tst_type = "";	// test type
 var sRowColor = "";
 var sRow = "";
@@ -213,7 +212,8 @@ function initgauges()
 					pointerColor: steelseries.ColorDef.BLUE,
 					lcdColor: steelseries.LcdColor.WHITE, 
 					ledColor: steelseries.LedColor.YELLOW_LED,
-					lcdDecimals: 1
+					lcdDecimals: 1,
+					trendVisible: true
 					});                               
 
 	gauge2_ss = new steelseries.Radial( // user journey avg. time
@@ -232,7 +232,8 @@ function initgauges()
 					pointerColor: steelseries.ColorDef.BLUE,
 					lcdColor: steelseries.LcdColor.WHITE, 
 					ledColor: steelseries.LedColor.YELLOW_LED,
-					lcdDecimals: 1
+					lcdDecimals: 1,
+					trendVisible: true
 					});                               
 
 	gauge3_ss = new steelseries.Radial( // web service avg. time
@@ -251,7 +252,8 @@ function initgauges()
 					pointerColor: steelseries.ColorDef.BLUE,
 					lcdColor: steelseries.LcdColor.WHITE, 
 					ledColor: steelseries.LedColor.YELLOW_LED,
-					lcdDecimals: 1
+					lcdDecimals: 1,
+					trendVisible: true
 					});                               
 
 	// Create a radial bargraph gauge
@@ -267,7 +269,8 @@ function initgauges()
 					lcdColor: steelseries.LcdColor.WHITE,
 					ledColor: steelseries.LedColor.RED_LED,
 					lcdDecimals: 1,
-					digitalFont: true
+					digitalFont: true,
+					trendVisible: true
 					});                                   
 
 
@@ -284,13 +287,14 @@ function initgauges()
 					lcdColor: steelseries.LcdColor.WHITE,
 					ledColor: steelseries.LedColor.RED_LED,
 					lcdDecimals: 1,
-					digitalFont: true
+					digitalFont: true,
+					trendVisible: true
 					});                                   
 
 
 	gauge6_ss = new steelseries.Linear('canvas_ss_gauge6', {
-					width: 600,
-					height: 100,
+					width: 340,
+					height: 120,
 					frameDesign: steelseries.FrameDesign.STEEL,
 					backgroundColor: steelseries.BackgroundColor.LIGHT_GRAY,
 					gaugeType: steelseries.GaugeType.TYPE5,
@@ -461,6 +465,8 @@ function parseXml(xml) {
 	var iPctKPIMissed = 0;
 	var sRC = "";
 	var iRC = "";
+	var tst_status = ""; 		// test status
+	var tst_time = "";
 
 	var now = new Date();
 	
@@ -541,7 +547,7 @@ function parseXml(xml) {
 					sSpeed = $(this).attr('LastTestDownloadSpeed');
 					sLTDSW = FormattedNumberWhole($(this).attr('LastTestDownloadSpeed'));
 					sLTDSD = FormattedNumberDecimal($(this).attr('LastTestDownloadSpeed'));
-														
+					tst_time = $(this).attr('LastTestLocalDateTime')									;
 					tst_status = $(this).attr('CurrentStatus');
 					//console.log('status = ' + tst_status);
 					switch (tst_status)
@@ -623,10 +629,10 @@ function parseXml(xml) {
 						// create table row and append						
 						sRow = "<tr class=\"" + sRowColor + "\">"
 						 + "<td width=\"40%\"class=\"" + sFontSize + " left\">" + " <span class=\"right\"><img src=\"images/mon_" + tag_a + "64.png\" width=\"64\" height=\"64\" title=\"" + tag + "\" /></span>" + $(this).attr('Label') + "</td>"
-						 + "<td width=\"15%\" class=\"" + sFontSize + " left\"> <img src=\"images/" + sImage + "\" width=\"64\" height=\"64\" title=\"" + tst_status + "\" />"  + $(this).attr('CurrentStatus') + "</td>"
-						 + "<td  width=\"25%\"class=\"" + "med" + " right\"> " + sRC + aResultCodes[Number(iRC)] + "</td>" //sRC = result code + colon , aResultCodes[Number(sRC) = description
+						 + "<td width=\"16%\" class=\"" + sFontSize + " left\"> <img src=\"images/" + sImage + "\" width=\"64\" height=\"64\" title=\"" + tst_status + "\" />"  + $(this).attr('CurrentStatus') + "</td>"
+						 + "<td width=\"25%\"class=\"" + "med" + " right\"> " + sRC + aResultCodes[Number(iRC)] + "</td>" //sRC = result code + colon , aResultCodes[Number(sRC) = description
 						 + "<td class=\"right\"><span class=\"big\">" + sLTDSW + "</span>" + "<span class=\"med\">" + sLTDSD + " s</span></td>"
-						 + "<td class=\"" + "" + "\">" + $(this).attr('LastTestLocalDateTime') + "</td>"
+						 + "<td class=\"" + "" + "\">" + tst_time + "</td>"
 						 + "<td class=\"" + "" + "\" right>" + sKpi + "</td>"
 						 + "</tr>";
 						
@@ -644,9 +650,15 @@ function parseXml(xml) {
 		iMonTimeAvg = (iMonTimeTotal / iMonTypeCount).toFixed(3);
 		
 		// save monitor counts away, using the loop counter -1 to vary the array pointer
-		aMonitorTimes[i-1][0] = iMonTimeMin; // page times, min
+		if (iMonTimeMin < 10000)
+			aMonitorTimes[i-1][0] = iMonTimeMin.toFixed(3); // page times, min
+		else
+			aMonitorTimes[i-1][0] = "NaN"
 		aMonitorTimes[i-1][1] = iMonTimeAvg; // page times, avg
-		aMonitorTimes[i-1][2] = iMonTimeMax; // page times, max
+		if (iMonTimeMax > 0)
+			aMonitorTimes[i-1][2] = iMonTimeMax.toFixed(3); // page times, max
+		else
+			aMonitorTimes[i-1][2] = "NaN"
 		//console.log (tag + ": Min: " + iMonTimeMin + ": Avg: " + iMonTimeAvg + ": Max: " + iMonTimeMax);
 	} // end for each monitor type
 		 
