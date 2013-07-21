@@ -29,10 +29,13 @@ var countOK = 0;
 var countProblem = 0;
 var countWarning = 0;
 var countDown = 0;
+var countDisabled = 0;
 var summary = "";
 var RBEstatus = new Boolean();
+var DISstatus = new Boolean();
 var obstext = "";
 var aResultCodes = new Array();
+DISstatus==false;
 
 // jquery function to get the XML data when timer requests it, on document load and at defined intervals
 $(document).ready(function()
@@ -110,6 +113,28 @@ function setRBE()
 		alert ("RBE filter will be removed at next refresh");
 	}
 } // end function setRBE
+
+// function to toggle display of disabled monitors
+function setDISABLED()
+{
+	DISstatus = document.getElementById('dis').checked;
+	//alert ("filter status:" + status);
+	if (DISstatus==true)
+	{
+
+		 alert ("Show Disabled Monitors filter will be applied at next refresh");
+		
+		//alert ("filter on");
+	}
+	else
+	{
+
+		 //document.getElementById("dis").checked=false;
+		
+		alert ("Show Disabled Monitor filter will be removed at next refresh");
+	}
+} // end function setRBE
+
 
 
 // function to break a number down to the whole and decimal parts
@@ -446,6 +471,7 @@ function parseXml(xml) {
 	countProblem = 0;
 	countWarning = 0;
 	countDown = 0;
+	countDisabled = 0;
 
 	// declare local variables
 	var tag = "";
@@ -467,10 +493,11 @@ function parseXml(xml) {
 	var iRC = "";
 	var tst_status = ""; 		// test status
 	var tst_time = "";
+	var monitoringON = "";
 
 	var now = new Date();
 	
-	obstext = "Last poll time:" + now;
+	obstext = "Last poll time: " + now;
 	// empty the table contents ready for the updated ones
 	$("#table#table tbody").empty();
 	
@@ -494,14 +521,14 @@ function parseXml(xml) {
 			}
 			else
 			{
-				obstext = obstext + "; Polling stopped - no connection to NCC Group API";	
+				obstext = obstext + "; Polling stopped - no connection to NCC Group API Service";	
 			}
 			
 	});
 	
-	lastobs_ss.setValue(obstext);
+
 	
-	// reset vars for all monitors
+	// reset vars for all monitors	
 	iMonKPIMet = 0;
 	iMonKPIMissed = 0;		
 	// loop for each type of monitor to be reported upon
@@ -537,6 +564,15 @@ function parseXml(xml) {
 		$(xml).find(tag).each(function() {
 				//find each instance of the switched monitor type in xml file
 				var label = $(this).attr('Label');
+				monitoringON = $(this).attr('Monitoring');
+				//console.log(label + ': monitoring status: '+  monitoringON);
+				
+				if (monitoringON != "true")
+				{
+					countDisabled = countDisabled + 1;	
+					//console.log(label + ': monitoring status: '+  monitoringON + "; count of disabled = " + countDisabled);
+				}
+				
 				//if blank, hide row
 				if (label == "") {
 				  $("table#table tbody tr").hide();
@@ -558,7 +594,11 @@ function parseXml(xml) {
 							sImage = "mon_ok.png";
 							iRC = $(this).attr('ResultCode');
 							sRC = "";
-							countOK = countOK + 1;
+							if (monitoringON == 'true') // only increment count when monitoring is true - never add when nonitoring is off
+							//if (DISstatus == true || (DISstatus == false && monitoringON == 'true')) // always increment count
+							{
+								countOK = countOK + 1;
+							}
 							break;
 							
 							case 'Warning':
@@ -567,7 +607,11 @@ function parseXml(xml) {
 							sImage = "mon_warning.png";
 							iRC = $(this).attr('ResultCode');
 							sRC = iRC + ": ";
-							countWarning = countWarning + 1;
+							if (monitoringON == 'true') // only increment count when monitoring is true - never add when nonitoring is off
+							//if (DISstatus == true || (DISstatus == false && monitoringON == 'true')) // always increment count
+							{
+								countWarning = countWarning + 1;
+							}
 							break;
 							
 							case 'Problem':
@@ -576,7 +620,12 @@ function parseXml(xml) {
 							sImage = "mon_problem.png";
 							iRC = $(this).attr('ResultCode');
 							sRC= iRC + ": ";
-							countProblem = countProblem + 1;
+							
+							if (monitoringON == 'true') // only increment count when monitoring is true - never add when nonitoring is off
+							//if (DISstatus == true || (DISstatus == false && monitoringON == 'true')) // always increment count
+							{
+								countProblem = countProblem + 1;
+							}
 							break;
 							
 							case 'Down':
@@ -585,23 +634,36 @@ function parseXml(xml) {
 							sImage = "mon_down.png";
 							iRC = $(this).attr('ResultCode');
 							sRC = iRC + ": ";
-							countDown = countDown + 1;
+							if (monitoringON == 'true') // only increment count when monitoring is true - never add when nonitoring is off
+							//if (DISstatus == true || (DISstatus == false && monitoringON == 'true')) // always increment count
+							{
+								countDown = countDown + 1;
+							}
 							break;
 							
 							default:
 							sRowColor = 'amber';
 						} // end switch
 			
-						// add this monitor's time to total and increment the monitor count
-						iMonTimeTotal = Number(iMonTimeTotal) + Number($(this).attr('LastTestDownloadSpeed'));
-						iMonTypeCount = Number(iMonTypeCount) + 1;
+						// check for monitoring disabled
+						if (monitoringON == "false")
+						{
+							sRowColor = "disabled";
+						}
 						
-						// update min and max times for this monitor type
-						if (Number($(this).attr('LastTestDownloadSpeed')) < Number(iMonTimeMin))
-							iMonTimeMin = Number($(this).attr('LastTestDownloadSpeed'));
-						if (Number($(this).attr('LastTestDownloadSpeed')) > Number(iMonTimeMax))
-							iMonTimeMax = Number($(this).attr('LastTestDownloadSpeed'));
-					
+						if (monitoringON == 'true') // only increment calcs when monitoring is true - never add when nonitoring is off
+							//if (DISstatus == true || (DISstatus == false && monitoringON == 'true')) // always increment count
+						{
+							// add this monitor's time to total and increment the monitor count
+							iMonTimeTotal = Number(iMonTimeTotal) + Number($(this).attr('LastTestDownloadSpeed'));
+							iMonTypeCount = Number(iMonTypeCount) + 1;
+							
+							// update min and max times for this monitor type
+							if (Number($(this).attr('LastTestDownloadSpeed')) < Number(iMonTimeMin))
+								iMonTimeMin = Number($(this).attr('LastTestDownloadSpeed'));
+							if (Number($(this).attr('LastTestDownloadSpeed')) > Number(iMonTimeMax))
+								iMonTimeMax = Number($(this).attr('LastTestDownloadSpeed'));
+						}
 						// check this monitor's latest download time against kpi
 						sSpeedKpi = $(this).attr('SpeedKpi');
 						if (sSpeedKpi > 0)
@@ -636,7 +698,7 @@ function parseXml(xml) {
 						 + "<td class=\"" + "" + "\" right>" + sKpi + "</td>"
 						 + "</tr>";
 						
-						if (RBEstatus==false || ( RBEstatus==true && tst_status !="OK" ) )
+						if ( (RBEstatus==false || (RBEstatus==true && tst_status !="OK" )) && (DISstatus == true || (DISstatus==false && monitoringON =="true")) ) 
 						{
 							$("table#table tbody").append(sRow);
 						}			
@@ -661,7 +723,13 @@ function parseXml(xml) {
 			aMonitorTimes[i-1][2] = "NaN"
 		//console.log (tag + ": Min: " + iMonTimeMin + ": Avg: " + iMonTimeAvg + ": Max: " + iMonTimeMax);
 	} // end for each monitor type
-		 
+	
+	// append to scroll info. if disabled count > 0
+	if (countDisabled > 0)
+	{
+		obstext = obstext + "; Disabled Monitor Count:" + countDisabled;
+	}
+	
 	// Calulate and update summary and statistics
 	// update summary of severity counts
 	document.getElementById('cntok').innerHTML = "OK: " + countOK.toString();
@@ -713,6 +781,8 @@ function parseXml(xml) {
 		errorled_ss.resetLed;
 		errorled_ss.repaint;
 	}
-	 
+
+	// display observation text in scrolling infobar
+	lastobs_ss.setValue(obstext);	 
 		 
 } // end function parseXml

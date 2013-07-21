@@ -83,7 +83,9 @@
 </table>
 <form>
   <input type="checkbox" id="rbe" name="rbe" onclick="setRBE()"/>
-  Report by Exception<br>
+  Report by Exception
+  <input type="checkbox" id="dis" name="dis" onclick="setDISABLED()"/>
+  Show Disabled Monitors<br>
 </form>
 <hr/>
 <!-- SteelSeries JavaScript gauges -->

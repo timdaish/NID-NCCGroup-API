@@ -228,7 +228,7 @@
 		// set up the various parts of the URL
 		$req_pt1 = "https://api.siteconfidence.co.uk/current/";
 		$req_pt2 = $apikey;
-		$req_pt3 = "/Return/[Account[AccountId,Name,Tz,TimeOffset,Pages[Page[Url,Label,LastTestLocalDateTime,LastTestLocalTimestamp,LastTestGmtDateTime,LastTestGmtTimestamp,LastTestDownloadSpeed,CurrentStatus,ResultCode,DownloadSpeed,SpeedKpi]],UserJourneys[UserJourney[Id,Label,OverallSpeedKPI,LastTestLocalDateTime,LastTestLocalTimestamp,LastTestGmtDateTime,LastTestGmtTimestamp,LastTestDownloadSpeed,CurrentStatus,ResultCode]],WebServices[WebService[Id,Label,OverallSpeedKPI,LastTestLocalDateTime,LastTestLocalTimestamp,LastTestGmtDateTime,LastTestGmtTimestamp,LastTestDownloadSpeed,CurrentStatus,ResultCode]]]]";
+		$req_pt3 = "/Return/[Account[AccountId,Name,Tz,TimeOffset,Pages[Page[Url,Label,Monitoring,LastTestLocalDateTime,LastTestLocalTimestamp,LastTestGmtDateTime,LastTestGmtTimestamp,LastTestDownloadSpeed,CurrentStatus,ResultCode,DownloadSpeed,SpeedKpi]],UserJourneys[UserJourney[Id,Label,Monitoring,OverallSpeedKPI,LastTestLocalDateTime,LastTestLocalTimestamp,LastTestGmtDateTime,LastTestGmtTimestamp,LastTestDownloadSpeed,CurrentStatus,ResultCode]],WebServices[WebService[Id,Label,Monitoring,OverallSpeedKPI,LastTestLocalDateTime,LastTestLocalTimestamp,LastTestGmtDateTime,LastTestGmtTimestamp,LastTestDownloadSpeed,CurrentStatus,ResultCode]]]]";
 		
 		$req_pt4 = "/AccountId/".$account.$monitors."StartDate/$today/EndDate/$today/LimitTestResults/1/";
 		$data_url = $req_pt1.$req_pt2.$req_pt3.$req_pt4;

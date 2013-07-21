@@ -41,7 +41,7 @@ if ( ! window.console ) console = { log: function(){} };
 	// called when 'Get Accounts' button is clicked
 	function getAccounts(form){
 		  
-		console.log("get accounts called");
+		//console.log("get accounts called");
 		var request;
 		var un = login.elements["username"].value;
 		var pw = login.elements["pw"].value;
@@ -103,7 +103,7 @@ if ( ! window.console ) console = { log: function(){} };
 		$(xml).find("Account").each(function() {
 		   	acntid = $(this).attr('AccountId');
 		   	acntname = 	$(this).attr('Name');
-		   	console.log(acntid + " " + acntname);
+		   	//console.log(acntid + " " + acntname);
 
 			$('#optAccounts').append($('<option>', { 
 				value: acntid,
