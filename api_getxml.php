@@ -119,8 +119,8 @@
 		global $apikey,$keyisvalid,$keytime,$dt_keytime,$username,$password; 
 	
 		//create array of data to be posted
-		$post_data['username'] = $username; //'tim.daish@nccgroup.com';
-		$post_data['password'] = urlencode($password);  // 2%2BVJ8ytcBf'   // change + sign to %2B in hex   2+VJ8ytcBf
+		$post_data['username'] = urlencode($username);
+		$post_data['password'] = urlencode($password);
 		//$post_data['Format'] = 'JSON';
 		
 		//traverse array and prepare data for posting (key1=value1)
