@@ -23,7 +23,7 @@ To be used for Proof-of-Concept, prototype and demonstration purposes by authori
 Created through an agile and evolutionary development method and maintained on an ad-hoc basis.
 
 Technologies:
-- HTML, JavaScript, jQuery, AJAX, PHP, XML, SteelSeries Javascript library.
+- HTML 5 canvas, JavaScript, jQuery, AJAX, PHP, XML, SteelSeries Javascript library.
 
 Installation instructions:
 - Unzip all files into a web server directory
