@@ -26,7 +26,9 @@ Operation instructions:
 - select 1 or more accounts from the listbox
 - optionally enter a list of comma separate monitor ids - normally leave blank to view all monitors
 - click "Get data"
-- once displayed, optionally select the RB E filter to Report by Exception (hides monitors in OK status)
+- once displayed:
+    -  optionally select the RBE filter to Report by Exception (hides monitors in OK status)
+    -  optionally select the view disabled monitor filter
 - use window zoom to best present display
 
 Browsers:
