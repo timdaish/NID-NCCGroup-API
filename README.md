@@ -24,8 +24,8 @@ Operation instructions:
 - enter your NCC Group Portal username and password
 - click "Get accounts"
 - select 1 or more accounts from the listbox
-- click "Get data"
 - optionally enter a list of comma separate monitor ids - normally leave blank to view all monitors
+- click "Get data"
 - once displayed, optionally select the RB E filter to Report by Exception (hides monitors in OK status)
 - use window zoom to best present display
 
