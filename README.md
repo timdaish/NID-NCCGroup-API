@@ -38,13 +38,13 @@ Operation instructions:
 - select 1 or more accounts from the listbox
 - click "Get data"
 - optionally enter a list of comma separate monitor ids - normally leave blank to view all monitors
-- once displayed, optionally select the RBE filter to Report by Exception (hides monitors in OK status)
+- once displayed, optionally select the RB E filter to Report by Exception (hides monitors in OK status)
 - use window zoom to best present display
 
 Browsers:
 - Google Chrome
 - Mozilla Firefox
-- Microsoft Internet Explorer (compatible, but others recommended)
+- Microsoft Internet Explorer 10 (earlier versions may not work as expected)
 - Tablets partially supported (media types added):
     - 1280x800 resolution screens (typical Android tablets)
     - 1024x768 resolution screens (iPad)
