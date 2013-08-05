@@ -201,8 +201,10 @@
 		// calc. interval between now and the time since the key was lsst used
 		// allow for a 30 minute difference - if time since the key was lsst used > 30 mins, set key to invalid to force a refresh
 		$interval = $dt_keylastusedtime->diff($nowtime);
-		//echo " key time diff: " . $interval->format('%R%i minutes'). " = ".$interval->format('%i') ."<br/>";
-		if (intval($interval->format('%i')) > 30){
+		$interval_minutes = $interval->format('%R%h hours') * 60 + $interval->format('%R%i minutes');
+		//echo " key time difference between now and last used: " . $interval->format('%R%h hours'). $interval->format('%R%i minutes'). " = ".$interval_minutes ." in minutes <br/>";
+	
+		if ($interval_minutes >= 60 ) {
 			$keytimeisvalid = false;
 			$_SESSION['keyisvalid'] = 0;
 			//echo "keytime is invalid"."<br/>";
