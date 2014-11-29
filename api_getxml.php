@@ -141,7 +141,8 @@
 		curl_setopt($curl_connection, CURLOPT_POST, true);
 		curl_setopt($curl_connection, CURLOPT_CONNECTTIMEOUT, 30);
 		curl_setopt($curl_connection, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($curl_connection, CURLOPT_SSLVERSION,3.1); 
+		curl_setopt($curl_connection, CURLOPT_SSLVERSION,5);
+		curl_setopt($curl_connection, CURLOPT_SSL_CIPHER_LIST,'SSLv3');  
 		curl_setopt($curl_connection, CURLOPT_SSL_VERIFYPEER, false);
 		curl_setopt($curl_connection, CURLOPT_SSL_VERIFYHOST,  2);
 		curl_setopt($curl_connection, CURLOPT_FOLLOWLOCATION, true);
@@ -200,10 +201,8 @@
 		// calc. interval between now and the time since the key was lsst used
 		// allow for a 30 minute difference - if time since the key was lsst used > 30 mins, set key to invalid to force a refresh
 		$interval = $dt_keylastusedtime->diff($nowtime);
-		$interval_minutes = $interval->format('%R%h hours') * 60 + $interval->format('%R%i minutes');
-		//echo " key time difference between now and last used: " . $interval->format('%R%h hours'). $interval->format('%R%i minutes'). " = ".$interval_minutes ." in minutes <br/>";
-	
-		if ($interval_minutes >= 60 ) {
+		//echo " key time diff: " . $interval->format('%R%i minutes'). " = ".$interval->format('%i') ."<br/>";
+		if (intval($interval->format('%i')) > 30){
 			$keytimeisvalid = false;
 			$_SESSION['keyisvalid'] = 0;
 			//echo "keytime is invalid"."<br/>";
@@ -230,7 +229,7 @@
 		// set up the various parts of the URL
 		$req_pt1 = "https://api.siteconfidence.co.uk/current/";
 		$req_pt2 = $apikey;
-		$req_pt3 = "/Return/[Account[AccountId,Name,Tz,TimeOffset,Pages[Page[Url,Label,Monitoring,LastTestLocalDateTime,LastTestLocalTimestamp,LastTestGmtDateTime,LastTestGmtTimestamp,LastTestDownloadSpeed,CurrentStatus,ResultCode,DownloadSpeed,SpeedKpi]],UserJourneys[UserJourney[Id,Label,Monitoring,OverallSpeedKPI,LastTestLocalDateTime,LastTestLocalTimestamp,LastTestGmtDateTime,LastTestGmtTimestamp,LastTestDownloadSpeed,CurrentStatus,ResultCode]],WebServices[WebService[Id,Label,Monitoring,OverallSpeedKPI,LastTestLocalDateTime,LastTestLocalTimestamp,LastTestGmtDateTime,LastTestGmtTimestamp,LastTestDownloadSpeed,CurrentStatus,ResultCode]]]]";
+		$req_pt3 = "/Return/[Account[AccountId,Name,Tz,TimeOffset,Pages[Page[Url,Label,Monitoring,LastTestLocalDateTime,LastTestLocalTimestamp,LastTestGmtDateTime,LastTestGmtTimestamp,LastTestDownloadSpeed,CurrentStatus,ResultCode,DownloadSpeed,SpeedKpi]],UserJourneys[UserJourney[Id,Label,OverallSpeedKPI,LastTestLocalDateTime,LastTestLocalTimestamp,LastTestGmtDateTime,LastTestGmtTimestamp,LastTestDownloadSpeed,CurrentStatus,ResultCode]],WebServices[WebService[Id,Label,OverallSpeedKPI,LastTestLocalDateTime,LastTestLocalTimestamp,LastTestGmtDateTime,LastTestGmtTimestamp,LastTestDownloadSpeed,CurrentStatus,ResultCode]]]]";
 		
 		$req_pt4 = "/AccountId/".$account.$monitors."StartDate/$today/EndDate/$today/LimitTestResults/1/";
 		$data_url = $req_pt1.$req_pt2.$req_pt3.$req_pt4;
@@ -244,7 +243,8 @@
 		curl_setopt($curl_connection, CURLOPT_POST, false);
 		curl_setopt($curl_connection, CURLOPT_CONNECTTIMEOUT, 30);
 		curl_setopt($curl_connection, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($curl_connection, CURLOPT_SSLVERSION,3.1); 
+		curl_setopt($curl_connection, CURLOPT_SSLVERSION,5);
+		curl_setopt($curl_connection, CURLOPT_SSL_CIPHER_LIST,'SSLv3'); 
 		curl_setopt($curl_connection, CURLOPT_SSL_VERIFYPEER, false);
 		curl_setopt($curl_connection, CURLOPT_SSL_VERIFYHOST,  2);
 		curl_setopt($curl_connection, CURLOPT_FOLLOWLOCATION, true);
