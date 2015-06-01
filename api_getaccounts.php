@@ -1,7 +1,10 @@
 <?php
+	// NON-INTERACTIVE DASHBOARD - api_getaccounts.php
+	// Tim Daish, NCC Group Web Performance
 	//
 	// Get the list of accounts from the API for the authorised user
 	//
+	// to debug, change POST parms to GET parms and submit via direct call in address bar with query parameters for username and pw
 	
 	// set header type to xml
 	header('Content-Type: application/xml');
@@ -25,9 +28,8 @@
 	// copy the posted parameters to variavles
 	$username = trim($_POST['username']);
     $password = trim($_POST['pw']);	
-	//echo $username." ".$password;
 
-	// start a PHP sression and set username and password session vars
+	// start a PHP session and set username and password session vars
 	session_start();
     $_SESSION['LoginSessionVar'] = $username;
     $_SESSION['PasswordSessionVar'] = $password;	
@@ -49,29 +51,20 @@
 	// check if session has already started
 	if (!isset($_SESSION['keytime'])) {
 		// new session
-    	// echo "new session<br/>";
-		//echo $username." ".$password." ".$account." ".$monitors; 		
-		
-		// set new sessiono vars
+	
+		// set new session vars
 		$_SESSION['keytime'] = null;
 		$_SESSION['keylastusedtime'] = null;
 		$_SESSION['keyisvalid'] = "";
 		$_SESSION['apikey'] = "";
 		$keyisvalid = 0;
-		
-		//echo "session vars: <br/>";
-		//echo "key time : " . $keytime."<br/>";
-		//echo "last used: " . $keylastusedtime."<br/>";
-		//echo "key state : " . $keyisvalid."<br/>";
-		//echo "api key : " . $apikey."<br/><br/>";
-		
+				
 		$dt_keytime = new DateTime();
 		$dt_keylastusedtime = new DateTime();
 		
 	} else
 	{
-    	// session has started	
-		//echo "in session<br/>";
+    	// session has already started	
 
 		// set vars from session vars
 		$keytime = $_SESSION['keytime'];
@@ -85,28 +78,49 @@
 	
 		$username = $_SESSION['LoginSessionVar'];
 		$password = $_SESSION['PasswordSessionVar'];
-		
-		//echo "session vars: <br/>";
-		//echo "key time : " . $keytime."<br/>";
-		//echo "last used: " . $keylastusedtime."<br/>";
-		//echo "key state : " . $keyisvalid."<br/>";
-		//echo "api key : " . $apikey."<br/><br/>";
-		
+			
 		$dt_keytime = new DateTime($keytime);
 		$dt_keylastusedtime = new DateTime($keylastusedtime);
 	};
 	
 	
+	GetDateTime();
+	CheckIfKeyHasExpired();
 
+	//echo "<br/>main vars<br/>";
+	//echo "key state = " .$keyisvalid."<br/>" ;
+	
+	// get a new API key if it has to be renewed
+	if ($keyisvalid == 0 OR $keytimeisvalid == false OR $apikey=="" ) {  //
+		LookupAPIKey();
+	}
+
+	// save session var as API key remains valid
+	$_SESSION['keyisvalid'] = $keyisvalid;
+	
+	//echo "key time : " . date_format($dt_keytime, 'Y-m-d H:i:s')."<br/>";
+	//echo "last used: " . date_format($dt_keylastusedtime, 'Y-m-d H:i:s')."<br/>";
+	//echo "api key: " . $apikey."<br/>";
+
+	//  use a valid API key to request data
+	if ($keyisvalid == 1)
+	{
+		RequestAPIData();
+	}
+	else
+	{
+		echo	"API key error";
+	}
+
+	
+	// FUNCTIONS
+	
 	// function to get today's date and time
 	function GetDateTime()
 	{	
 		//echo "function GetDateTime called - setting date and time";
 		global $today, $time5minsago,$time5minsfuture ;
-		
-		//echo "Date and time information...<br>"; 
-		//echo "UTC: ".time()."<br/>"; 
-		
+
 		// set up request data vars
 		$today = date("Y-m-d");
 		$timestamp = strftime("%Y-%m-%d %H:%M:%S %Y");
@@ -135,9 +149,8 @@
 		//create the final string to be posted using implode()
 		$post_string = implode ('&', $post_items);
 		
-		//echo "the data string to be poseted is: " . $post_string ."<br />"; 
 		
-		//create cURL connection
+		//create CURL connection
 		$curl_connection = curl_init('https://api.siteconfidence.co.uk/current/auth');
 		
 		//set cURL options
@@ -167,7 +180,7 @@
 		//var_dump(json_decode($result, true));
 		//echo "</pre><br />";
 		
-		// decode JSON response to sttring
+		// decode JSON response to string
 		$my_array = json_decode($result, true);
 		// extract the api key and save to session var
 		$apikey = $my_array['Response']['ApiKey']['Value'];
@@ -200,7 +213,7 @@
 		//	echo "last used: " . $keylastusedtime."<br/>";
 		
 		// calc. interval between now and the time since the key was lsst used
-		// allow for a 30 minute difference - if time since the key was lsst used > 30 mins, set key to invalid to force a refresh
+		// allow for a 30 minute difference - if time since the key was last used > 30 mins, set key to invalid to force a refresh
 		$interval = $dt_keylastusedtime->diff($nowtime);
 		//echo " key time diff: " . $interval->format('%R%i minutes'). " = ".$interval->format('%i') ."<br/>";
 		if (intval($interval->format('%i')) > 30){
@@ -217,7 +230,7 @@
 	} // end function CheckIfKeyHasExpired
 	
 	
-	// function to get the API data usting a valid API key
+	// function to get the API data using a valid API key
 	function RequestAPIData()
 	{
 		//echo "function RequestAPIData called - get API data";
@@ -247,7 +260,7 @@
 		curl_setopt($curl_connection, CURLOPT_SSL_VERIFYHOST,  2);
 		curl_setopt($curl_connection, CURLOPT_FOLLOWLOCATION, true);
 		
-		//perform cURL request
+		//perform CURL request
 		$result = curl_exec($curl_connection);
 		
 		//show information regarding the request
@@ -265,7 +278,7 @@
 		//echo "</pre>";
 		
 	
-		// nupdate session vars for key used time
+		// update session vars for key used time
 		$dt_keylastusedtime =  new DateTime( strftime("%Y-%m-%d %H:%M:%S %Y"));
 		$_SESSION['keylastusedtime'] = $dt_keylastusedtime->format('Y-m-d H:i:s');
 		$keylastusedtime = $dt_keylastusedtime->format('Y-m-d H:i:s');
@@ -273,40 +286,6 @@
 		echo $result;
 		
 	} // end function RequestAPIData
-
-
-
-	//-----------------------------------------------------------------
-	// MAIN LINE
-	// 
-	
-	GetDateTime();
-	CheckIfKeyHasExpired();
-
-	//echo "<br/>main vars<br/>";
-	//echo "key state = " .$keyisvalid."<br/>" ;
-	
-	// get a new API key if it has to be renewed
-	if ($keyisvalid == 0 OR $keytimeisvalid == false OR $apikey=="" ) {  //
-		LookupAPIKey();
-	}
-
-	// save sesision var as API key remains valid
-	$_SESSION['keyisvalid'] = $keyisvalid;
-	
-	//echo "key time : " . date_format($dt_keytime, 'Y-m-d H:i:s')."<br/>";
-	//echo "last used: " . date_format($dt_keylastusedtime, 'Y-m-d H:i:s')."<br/>";
-	//echo "api key: " . $apikey."<br/>";
-
-	//  use a valid API key to request data
-	if ($keyisvalid == 1)
-	{
-		RequestAPIData();
-	}
-	else
-	{
-		echo	"API key error";
-	}
 
 ?>
 

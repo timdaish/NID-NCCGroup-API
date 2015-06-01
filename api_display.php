@@ -1,9 +1,14 @@
 <?php
+	// NON-INTERACTIVE DASHBOARD - api_display.php
+	// Tim Daish, NCC Group Web Performance
 	//
-	// Login to a Display of data from NCC Group API on screen - NON-INTERACTIVE DISPLAY
+	// Display data from NCC Group API on screen - NON-INTERACTIVE DISPLAY
+	// JavaScript periodically runs to call api_getxml.php via AJAX and update display (in api_funcs.js)
+	// - default update = 5mins
 	//
+	// Implements gauges from SteelSeries
 
-	// check the posted variables are provided
+	// check the required posted variables are provided
     if(empty($_POST['username']))
     {
         echo("UserName is empty!");
@@ -22,30 +27,22 @@
         return false;
     }
     
-	// monitors are optional - no checks for missing data
-    //if(empty($_POST['monitors']))
-    //{
-    //    echo("Monitors is empty!");
-    //    return false;
-    //}
-  
   	// trim the posted variables and save them to variables
     $username = trim($_POST['username']);
     $password = trim($_POST['pw']);
     $monitors = trim($_POST['monitors']);
     $optAccounts = array ();
 	$optAccounts = ($_POST['accounts']);
-	$account = implode(",",$optAccounts); 
-	//echo $monitors;
-	
+	$account = implode(",",$optAccounts);
+    $serport = $_POST['sport']; // serial port for output
+
 	// start a PHP session and set session vars
     session_start();
     $_SESSION['LoginSessionVar'] = $username;
     $_SESSION['PasswordSessionVar'] = $password;
 	$_SESSION['AccountSessionVar'] = $account;
-	$_SESSION['MonitorsSessionVar'] = $monitors;	
-	 
-	//echo $username." ".$password." ".$account." ".$monitors; 
+	$_SESSION['MonitorsSessionVar'] = $monitors;
+    $_SESSION['SerialPort'] = $serport;
 	 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

@@ -6,29 +6,27 @@
 <title>Web Site Availability & Performance (API login demo)</title>
 </head>
 <body>
+<h1><img src="images/demo-logo.jpg" alt="demo logo" width="100" height="100" align="absmiddle" />Login to Monitoring API</h1>
 <div class="container shadow">
   <div class="login">
     <form id='login' action='api_display.php' method='post' accept-charset='UTF-8'>
       <fieldset >
-        <h1><img src="images/demo-logo.jpg" alt="demo logo" width="100" height="100" align="absmiddle" />Login to Monitoring API</h1>
         <input type='hidden' name='submitted' id='submitted' value='1'/>
-        <p>
-          <input type='text' name='username' id='username' required='true' maxlength='50' placeholder='Username' />
-        </p>
-        <p>
-          <input type='password' name='pw' id='pw' maxlength='30'  required='true' placeholder='Password' />
-        </p>
+        <label for="username">Username</label>
+        <input type='text' name='username' id='username' required='true' maxlength='50' placeholder='Username' />
+        <label for="password">Password</label>
+        <input type='password' name='pw' id='pw' maxlength='30'  required='true' placeholder='Password' />
+        <label for="optAccounts">Accounts</label>
         <select id="optAccounts" name="accounts[]" multiple="multiple">
           <option value="na">accounts not retrieved</option>
         </select>
-        <p>
-          <textarea name='monitors' id='monitors'  maxlength='500' rows='10' cols='70' placeholder='Optional monitor ids'></textarea>
-        </p>
-        <p>&nbsp;</p>
-        <p>
-          <input type="button" onclick="getAccounts(this)" value="Get Accounts"/>
-          <input type='submit' name='Submit' id="Submit" disabled='disabled' value='View Data' />
-        </p>
+        <label for="monitors">Monitors</label>
+        <textarea name='monitors' id='monitors'  maxlength='500' rows='4' cols='62' placeholder='Optional monitor ids'></textarea>
+        <p></p>
+        <label for="sport">Serial Port Configuration</label>
+        <input type='text' name='sport' id='sport' maxlength='1' placeholder='Optional COM Port number' />
+        <input type='submit' name='Submit' id="Submit" disabled='disabled' value='View Data' />
+        <input type="button" onclick="getAccounts(this)" value="Get Accounts"/>
       </fieldset>
     </form>
   </div>

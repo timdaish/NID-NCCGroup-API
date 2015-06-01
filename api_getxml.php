@@ -1,19 +1,22 @@
 <?php
+	// NON-INTERACTIVE DASHBOARD - api_getxml.php
+	// Tim Daish, NCC Group Web Performance
 	//
-	// Get the requested test information from the API for the selected accounts
+	// Get the requested test data from the API for the selected accounts using the API Key
 	//
-
-	// start a PHP sression and set username and password session vars
+	
+	// reference the serial class if external serial communication is required
+    require("php_serial.class2.php");
+	
+	// start a PHP session and set username and password session vars
 	session_start();
 
 	// set timeout	for PHP requests
 	ini_set('max_execution_time', 60); //60 seconds = 1 minutes
-	
-	//echo $username." ".$password." ".$account." ".$monitors; 
 
 	// set header type to xml
 	header('Content-Type: application/xml');
-	
+
 	// set date timezone to UTC	
 	date_default_timezone_set('UTC'); 
 	
@@ -32,28 +35,19 @@
 	// check if session has already started
 	if (!isset($_SESSION['keytime'])) {
 		// new session
-    	// echo "new session<br/>";
-		
 		$_SESSION['keytime'] = null;
 		$_SESSION['keylastusedtime'] = null;
 		$_SESSION['keyisvalid'] = "";
 		$_SESSION['apikey'] = "";
 		$keyisvalid = 0;
-		
-		//echo "session vars: <br/>";
-		//echo "key time : " . $keytime."<br/>";
-		//echo "last used: " . $keylastusedtime."<br/>";
-		//echo "key state : " . $keyisvalid."<br/>";
-		//echo "api key : " . $apikey."<br/><br/>";
-		
+
 		$dt_keytime = new DateTime();
 		$dt_keylastusedtime = new DateTime();
 		
 	} else
 	{
-    	// session has started
-		// echo "in session<br/>";
-		
+    	// session has already started
+
 		$keytime = $_SESSION['keytime'];
 		$keylastusedtime = $_SESSION['keylastusedtime'];
 		if ($_SESSION['keyisvalid'] != "1" || $_SESSION['apikey'] == "" )
@@ -66,7 +60,8 @@
 		$username = $_SESSION['LoginSessionVar'];
 		$password = $_SESSION['PasswordSessionVar'];
 		$account = $_SESSION['AccountSessionVar'];
-		$monitors = $_SESSION['MonitorsSessionVar'];	
+		$monitors = $_SESSION['MonitorsSessionVar'];
+        $serport = $_SESSION['SerialPort'];
 
 		if($monitors !="")
 		{
@@ -77,16 +72,37 @@
 		$account = $account."/";
 		}
 		
-		//echo "session vars: <br/>";
-		//echo "key time : " . $keytime."<br/>";
-		//echo "last used: " . $keylastusedtime."<br/>";
-		//echo "key state : " . $keyisvalid."<br/>";
-		//echo "api key : " . $apikey."<br/><br/>";
-		
 		$dt_keytime = new DateTime($keytime);
 		$dt_keylastusedtime = new DateTime($keylastusedtime);
 	};
 	
+	GetDateTime();
+	CheckIfKeyHasExpired();
+
+	// get a new API key if it has to be renewed
+	if ($keyisvalid == 0 OR $keytimeisvalid == false OR $apikey=="" ) {  //
+		LookupAPIKey();
+	}
+
+	// save sesision var as API key remains valid
+	$_SESSION['keyisvalid'] = $keyisvalid;
+	
+	//echo "key time : " . date_format($dt_keytime, 'Y-m-d H:i:s')."<br/>";
+	//echo "last used: " . date_format($dt_keylastusedtime, 'Y-m-d H:i:s')."<br/>";
+	//echo "api key: " . $apikey."<br/>";
+
+	//  use a valid API key to request data
+	if ($keyisvalid == 1)
+	{
+		RequestAPIData();
+	}
+	else
+	{
+		echo	"API key error";
+	}
+	
+	
+	// FUNCTIONS
 	
 	// function to get today's date and time
 	function GetDateTime()
@@ -148,7 +164,7 @@
 		curl_setopt($curl_connection, CURLOPT_FOLLOWLOCATION, true);
 		curl_setopt($curl_connection, CURLOPT_POSTFIELDS, $post_string);
 		
-		//perform cURL request
+		//perform CURL request
 		$result = curl_exec($curl_connection);
 		
 		//show information regarding the request
@@ -223,7 +239,7 @@
 	
 		global $today, $time5minsago,$time5minsfuture;
 		global $apikey,$keylastusedtime,$dt_keylastusedtime;
-		global $account, $monitors;	
+		global $account, $monitors,$serport;
 		// ---------------- request the data
 		
 		// set up the various parts of the URL
@@ -235,9 +251,9 @@
 		$data_url = $req_pt1.$req_pt2.$req_pt3.$req_pt4;
 		//echo "REQUEST URL and data: " . $data_url ."<br />";
 		
-		//create cURL connection
+		//create CURL connection
 		$curl_connection = curl_init($data_url);
-		
+
 		//set options
 		curl_setopt($curl_connection, CURLOPT_FRESH_CONNECT, true);
 		curl_setopt($curl_connection, CURLOPT_POST, false);
@@ -268,63 +284,182 @@
 		//var_dump(json_decode($result, true));
 		//echo "</pre>";
 		
-		// EXTEND PHP CODE HERE TO SAVE THE RETURNED DATA AWAY
-		// save JSON response to file if required
-		//file_put_contents("apidata.xml",$result);
-		//
-		// Do any database work here
-		//
-	
-		// nupdate session vars for key used time
+		// update session vars for key used time
 		$dt_keylastusedtime =  new DateTime( strftime("%Y-%m-%d %H:%M:%S %Y"));
 		$_SESSION['keylastusedtime'] = $dt_keylastusedtime->format('Y-m-d H:i:s');
 		$keylastusedtime = $dt_keylastusedtime->format('Y-m-d H:i:s');
 		
-		// return the resulting XML document or an invalid indicator
-		//if ($responsecode == '200')
-		//{
-			
-			echo $result;
-		//}
-		//else
-		//{
-		//	echo $responsecode;	
-		//}
+		// return the resulting XML document to the calling function (in api_display.php)
+		echo $result;
+
+
+		// OPTIONAL: continue processing the XML document in PHP
+		// XML Processing using SimpleXML
+		$xml = simplexml_load_string($result);
+		//print_r($xml);
+
+		
+		// OPTIONAL SECTION FOR SAVING TO LOCAL FILE OR DATABASE
+		// file_put_contents("apidata.xml",$result);
+		// Do any XML processing of the response here to save in local database
+		/*
+		   // save data to database, not written
+		*/
+		
+		
+		// OPTIONAL SECTION FOR SERIAL PORT COMMUNICATION TO EXTERNAL DEVICE, e.g Arduino
+		// initialise status indicators for each of pages, user journeys and web services
+		$pgstatusOK = false;
+		$pgstatusWarn = false;
+		$pgstatusProb = false;
+		$pgstatusDown = false;
+		$pgstatus = "O";
+		$ujstatusOK = false;
+		$ujstatusWarn = false;
+		$ujstatusProb = false;
+		$ujstatusDown = false;
+		$ujstatus = "O";
+        $wsstatusOK = false;
+		$wsstatusWarn = false;
+		$wsstatusProb = false;
+		$wsstatusDown = false;
+		$wsstatus = "O";
+		$overallstatus = '';
+
+		// For each account, Check the response severity for pages, user journeys and web services
+		foreach ($xml->Response->Account as $account)
+		{
+			// pages
+			if($account->Pages->count() > 0)
+			{
+				foreach ($account->Pages->Page as $page) {
+					$url = (string)$page['Url'];
+					$pgmon =(string)$page['Monitoring'];
+					$pagestatus =(string)$page['CurrentStatus'];
+					//print_r($url ."=" . $pgmon."<br/>");
+
+					if($pgmon == "true")
+					{
+					   if( $pagestatus=="OK")
+						   $pgstatusOK = true;
+					   if( $pagestatus=="Warning")
+						   $pgstatusWarn = true;
+					   if( $pagestatus=="Problem")
+						   $pgstatusProb = true;
+					   if( $pagestatus=="Down")
+						   $pgstatusDown = true;
+					   }
+				}// end for each page
+				
+				// set page severity
+				if($pgstatusDown == true)
+					$pgstatus = "D";
+				else
+					if($pgstatusProb == true)
+						$pgstatus = "P";
+					else
+						if($pgstatusWarn == true)
+							$pgstatus = "W";
+			} // end for each page monitor
+
+			// user journeys
+			if($account->UserJourneys->count() > 0)
+			{
+				foreach ($account->UserJourneys->UserJourney as $uj) {
+					//$url = (string)$uj['Url'];
+					$ujmon =(string)$uj['Monitoring'];
+					$ujstatus =(string)$uj['CurrentStatus'];
+					//print_r($url ."=" . $ujmon."<br/>");
+
+					if($ujmon == "true")
+					{
+					   if( $ujstatus=="OK")
+						   $ujstatusOK = true;
+					   if( $ujstatus=="Warning")
+						   $ujstatusWarn = true;
+					   if( $ujstatus=="Problem")
+						   $ujstatusProb = true;
+					   if( $ujstatus=="Down")
+						   $ujstatusDown = true;
+					   }
+				}// end for each user journey
+				
+				// set user journey severity
+				if($ujstatusDown == true)
+					$ujstatus = "D";
+				else
+					if($ujstatusProb == true)
+						$ujstatus = "P";
+					else
+						if($ujstatusWarn == true)
+							$ujstatus = "W";
+
+			} // end for each user journey
+
+			// web services
+			if($account->WebServices->count() > 0)
+			{
+				foreach ($account->WebServices->WebService as $ws) {
+					//$url = (string)$uj['Url'];
+					$wsmon =(string)$ws['Monitoring'];
+					$wsstatus =(string)$ws['CurrentStatus'];
+					//print_r($url ."=" . $ujmon."<br/>");
+
+					if($wsmon == "true")
+					{
+					   if( $wsstatus=="OK")
+						   $wsstatusOK = true;
+					   if( $wsstatus=="Warning")
+						   $wsstatusWarn = true;
+					   if( $wsstatus=="Problem")
+						   $wsstatusProb = true;
+					   if( $wsstatus=="Down")
+						   $wsstatusDown = true;
+					   }
+				}// end for each user journey
+				
+				// set web service severity
+				if($wsstatusDown == true)
+					$wsstatus = "D";
+				else
+					if($wsstatusProb == true)
+						$wsstatus = "P";
+					else
+						if($wsstatusWarn == true)
+							$wsstatus = "W";
+			} // end for each web service
+
+		 } // end for each account
+
+		 // consolidate page, uj and webservices statuses
+		 if($pgstatus == "D" or $ujstatus == "D" or $wsstatus == "D")
+			$overallstatus = "D";
+		 else
+			if($pgstatus == "P" or $ujstatus == "P" or $wsstatus == "P")
+				$overallstatus = "P";
+			else
+				if($pgstatus == "W" or $ujstatus == "W" or $wsstatus == "W")
+					$overallstatus = "W";
+				else
+					$overallstatus = "O";
+
+					
+					
+		// configure serial port and send the character representing the highest level of severity
+		$serialport = "COM".$serport; // WINDOWS format - comment out is using LINUX
+		//$serialport = "/dev/ttyS".$serport; // LINUX formatusing LINUX - comment out if using WINDOWS - UNTESTED ON LINUX
+		$serial = new phpSerial();
+		$serial->deviceSet($serialport);
+		$serial->confParity("none");
+		$serial->confCharacterLength(7);
+		$serial->confStopBits(1);
+		$serial->confFlowControl("none");
+		$serial->confBaudRate(9600);
+		$serial->deviceOpen('w+');
+		sleep(1);
+		$serial->sendMessage($overallstatus);
+		$serial->deviceClose();
+  
 		
 	} // end function RequestAPIData
-
-
-	//-----------------------------------------------------------------
-	// MAIN LINE
-	// 
-	
-	GetDateTime();
-	CheckIfKeyHasExpired();
-
-	//echo "<br/>main vars<br/>";
-	//echo "key state = " .$keyisvalid."<br/>" ;
-	
-	// get a new API key if it has to be renewed
-	if ($keyisvalid == 0 OR $keytimeisvalid == false OR $apikey=="" ) {  //
-		LookupAPIKey();
-	}
-
-	// save sesision var as API key remains valid
-	$_SESSION['keyisvalid'] = $keyisvalid;
-	
-	//echo "key time : " . date_format($dt_keytime, 'Y-m-d H:i:s')."<br/>";
-	//echo "last used: " . date_format($dt_keylastusedtime, 'Y-m-d H:i:s')."<br/>";
-	//echo "api key: " . $apikey."<br/>";
-
-	//  use a valid API key to request data
-	if ($keyisvalid == 1)
-	{
-		RequestAPIData();
-	}
-	else
-	{
-		echo	"API key error";
-	}
-
 ?>
-

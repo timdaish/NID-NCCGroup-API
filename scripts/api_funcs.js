@@ -436,7 +436,7 @@ function readRClabels() {
 
 // function to load the result codes into an array
 function parseRCXml(xml) {
-	
+
 	var RCid = "";
 	var RCsev = "";
 	var RCdesc = "";
@@ -464,7 +464,7 @@ function parseRCXml(xml) {
 
 // functioon to parse the returned XML data
 function parseXml(xml) {
-
+	//console.log(xml);
 	// global variables
 	// reset the counts for each test result severity
 	countOK = 0;
