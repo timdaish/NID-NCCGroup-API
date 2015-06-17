@@ -443,23 +443,31 @@
 				else
 					$overallstatus = "O";
 
-					
-					
-		// configure serial port and send the character representing the highest level of severity
-		$serialport = "COM".$serport; // WINDOWS format - comment out is using LINUX
-		//$serialport = "/dev/ttyS".$serport; // LINUX formatusing LINUX - comment out if using WINDOWS - UNTESTED ON LINUX
-		$serial = new phpSerial();
-		$serial->deviceSet($serialport);
-		$serial->confParity("none");
-		$serial->confCharacterLength(7);
-		$serial->confStopBits(1);
-		$serial->confFlowControl("none");
-		$serial->confBaudRate(9600);
-		$serial->deviceOpen('w+');
-		sleep(1);
-		$serial->sendMessage($overallstatus);
-		$serial->deviceClose();
-  
+		// output to serial port only if port was defined			
+		if($serport != '')
+		{
+			try
+			{
+				// configure serial port and send the character representing the highest level of severity
+				$serialport = "COM".$serport; // WINDOWS format - comment out is using LINUX
+				//$serialport = "/dev/ttyS".$serport; // LINUX formatusing LINUX - comment out if using WINDOWS - UNTESTED ON LINUX
+				$serial = new phpSerial();
+				$serial->deviceSet($serialport);
+				$serial->confParity("none");
+				$serial->confCharacterLength(7);
+				$serial->confStopBits(1);
+				$serial->confFlowControl("none");
+				$serial->confBaudRate(9600);
+				$serial->deviceOpen('w+');
+				sleep(1);
+				$serial->sendMessage($overallstatus);
+				$serial->deviceClose();
+			}
+			catch (Exception $e)
+			{
+				// continue
+			}
+		} // end send serial output
 		
 	} // end function RequestAPIData
 ?>
