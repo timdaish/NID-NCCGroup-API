@@ -4,8 +4,7 @@
 	//
 	// Get the list of accounts from the API for the authorised user
 	//
-	// to debug, change POST parms to GET parms and submit via direct call in address bar with query parameters for username and pw
-	
+
 	// set header type to xml
 	header('Content-Type: application/xml');
 	

@@ -2,6 +2,8 @@
 	// NON-INTERACTIVE DASHBOARD - api_display.php
 	// Tim Daish, NCC Group Web Performance
 	//
+    // Release: v1.1 April 2016
+    //
 	// Display data from NCC Group API on screen - NON-INTERACTIVE DISPLAY
 	// JavaScript periodically runs to call api_getxml.php via AJAX and update display (in api_funcs.js)
 	// - default update = 5mins

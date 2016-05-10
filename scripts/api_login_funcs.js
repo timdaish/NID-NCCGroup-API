@@ -1,6 +1,6 @@
 /* api_login_funcs.js
 //
-// Release: v1.0 July 2013
+// Release: v1.1 April 2016
 //
 // Author: Tim Daish BA(Hons) MBCS CTAL-TM
 //         Technical Consultant, NCC Group Web Performance
@@ -8,6 +8,10 @@
 // Function Library for demo pages for API in XML format
 //
 */
+
+//declare global vars
+var un = "";
+var pw = "";
 
 if ( ! window.console ) console = { log: function(){} };	
 	// declare variables
@@ -30,7 +34,7 @@ if ( ! window.console ) console = { log: function(){} };
 				return true;
 			}
 			else {
-				alert("error: Please select at least account");
+				alert("error: Please select at least one account");
 				return false;
 			}
 		});
@@ -43,8 +47,12 @@ if ( ! window.console ) console = { log: function(){} };
 		  
 		//console.log("get accounts called");
 		var request;
-		var un = login.elements["username"].value;
-		var pw = login.elements["pw"].value;
+		un = login.elements["username"].value;
+		pw = login.elements["pw"].value;
+        
+        sessionStorage.setItem("un",un);
+        sessionStorage.setItem("pw",pw);
+        
 		var urlstring = "api_getaccounts.php"
 		//console.log(urlstring);  
 		var $form = $(login);
@@ -53,7 +61,9 @@ if ( ! window.console ) console = { log: function(){} };
 		// serialize all the form inputs		  
 		var serializedData = $form.serialize();
   		//console.log("sdata = " + serializedData);
-		
+		sessionStorage.setItem("sd",serializedData);
+        
+        
 		// disable the inputs for the duration of the ajax request
     	$inputs.prop("disabled", true);
 		

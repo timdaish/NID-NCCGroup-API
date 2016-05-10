@@ -1,0 +1,52 @@
+Non-Interactive Dashboard Debug Log - getxml.php[21-Apr-2016 14:22:24 UTC] tim.daish@nccgroup.com.
+[21-Apr-2016 14:22:24 UTC] key time : 2016-04-21 14:02:42
+[21-Apr-2016 14:22:24 UTC] last used: 2016-04-21 14:21:59
+[21-Apr-2016 14:22:24 UTC] api key: 56d78036834b3b9459acd02f9d437e63
+[21-Apr-2016 14:22:24 UTC] key is valid
+[21-Apr-2016 14:22:24 UTC] function RequestAPIData called - get API data
+[21-Apr-2016 14:22:24 UTC] XML RESPONSE: 2016-04-21 14:22:24: Ok 200 Success.
+[21-Apr-2016 14:22:24 UTC] PHP Fatal error:  Uncaught exception 'phpSerialException' with message 'Specified serial port is not valid' in /var/sites/d/daish.net/public_html/webperf/php_serial.class2.php:133
+Stack trace:
+#0 /var/sites/d/daish.net/public_html/webperf/api_getxml.php(512): phpSerial->deviceSet('COM')
+#1 /var/sites/d/daish.net/public_html/webperf/api_getxml.php(125): RequestAPIData()
+#2 {main}
+  thrown in /var/sites/d/daish.net/public_html/webperf/php_serial.class2.php on line 133
+Non-Interactive Dashboard Debug Log - getxml.php[21-Apr-2016 14:23:37 UTC] tim.daish@nccgroup.com.
+[21-Apr-2016 14:23:37 UTC] key time : 2016-04-21 14:02:42
+[21-Apr-2016 14:23:37 UTC] last used: 2016-04-21 14:23:19
+[21-Apr-2016 14:23:37 UTC] api key: 56d78036834b3b9459acd02f9d437e63
+[21-Apr-2016 14:23:37 UTC] key is valid
+[21-Apr-2016 14:23:37 UTC] function RequestAPIData called - get API data
+[21-Apr-2016 14:23:37 UTC] XML RESPONSE: 2016-04-21 14:23:37: Ok 200 Success.
+[21-Apr-2016 14:23:37 UTC] PHP Fatal error:  Uncaught exception 'phpSerialException' with message 'Specified serial port is not valid' in /var/sites/d/daish.net/public_html/webperf/php_serial.class2.php:133
+Stack trace:
+#0 /var/sites/d/daish.net/public_html/webperf/api_getxml.php(512): phpSerial->deviceSet('COM')
+#1 /var/sites/d/daish.net/public_html/webperf/api_getxml.php(125): RequestAPIData()
+#2 {main}
+  thrown in /var/sites/d/daish.net/public_html/webperf/php_serial.class2.php on line 133
+Non-Interactive Dashboard Debug Log - getxml.php[21-Apr-2016 14:25:15 UTC] nick.webb@jdwilliams.co.uk.
+[21-Apr-2016 14:25:15 UTC] key time : 2016-04-21 14:00:10
+[21-Apr-2016 14:25:15 UTC] last used: 2016-04-21 14:20:15
+[21-Apr-2016 14:25:15 UTC] api key: b77305d52c37307f929f154896b174f4
+[21-Apr-2016 14:25:15 UTC] key is valid
+[21-Apr-2016 14:25:15 UTC] function RequestAPIData called - get API data
+[21-Apr-2016 14:25:15 UTC] XML RESPONSE: 2016-04-21 14:25:15: Ok 200 Success.
+[21-Apr-2016 14:25:15 UTC] PHP Fatal error:  Uncaught exception 'phpSerialException' with message 'Specified serial port is not valid' in /var/sites/d/daish.net/public_html/webperf/php_serial.class2.php:133
+Stack trace:
+#0 /var/sites/d/daish.net/public_html/webperf/api_getxml.php(512): phpSerial->deviceSet('COM')
+#1 /var/sites/d/daish.net/public_html/webperf/api_getxml.php(125): RequestAPIData()
+#2 {main}
+  thrown in /var/sites/d/daish.net/public_html/webperf/php_serial.class2.php on line 133
+Non-Interactive Dashboard Debug Log - getxml.php[21-Apr-2016 14:26:27 UTC] tim.daish@nccgroup.com.
+[21-Apr-2016 14:26:27 UTC] key time : 2016-04-21 14:02:42
+[21-Apr-2016 14:26:27 UTC] last used: 2016-04-21 14:23:37
+[21-Apr-2016 14:26:27 UTC] api key: 56d78036834b3b9459acd02f9d437e63
+[21-Apr-2016 14:26:27 UTC] key is valid
+[21-Apr-2016 14:26:27 UTC] function RequestAPIData called - get API data
+[21-Apr-2016 14:26:28 UTC] XML RESPONSE: 2016-04-21 14:26:28: Ok 200 Success.
+[21-Apr-2016 14:26:28 UTC] PHP Fatal error:  Uncaught exception 'phpSerialException' with message 'Specified serial port is not valid' in /var/sites/d/daish.net/public_html/webperf/php_serial.class2.php:133
+Stack trace:
+#0 /var/sites/d/daish.net/public_html/webperf/api_getxml.php(512): phpSerial->deviceSet('COM')
+#1 /var/sites/d/daish.net/public_html/webperf/api_getxml.php(125): RequestAPIData()
+#2 {main}
+  thrown in /var/sites/d/daish.net/public_html/webperf/php_serial.class2.php on line 133

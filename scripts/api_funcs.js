@@ -1,6 +1,6 @@
 /* api_funcs.js
 //
-// Release: v1.0 July 2013
+// Release: v1.1 April 2016
 //
 // Author: Tim Daish BA(Hons) MBCS CTAL-TM
 //         Technical Consultant, NCC Group Web Performance
@@ -35,7 +35,8 @@ var RBEstatus = new Boolean();
 var DISstatus = new Boolean();
 var obstext = "";
 var aResultCodes = new Array();
-DISstatus==false;
+DISstatus=false;
+var pollperiodms = 300000; // 300000 miliseconds = 5 minutes, change this value to change update frequency - 60000 = 1 minute
 
 // jquery function to get the XML data when timer requests it, on document load and at defined intervals
 $(document).ready(function()
@@ -59,7 +60,7 @@ $(document).ready(function()
 
 	function refresh_timer(){
 		//console.log('function refresh_timer called');
-		setTimeout(refresh_timer, 300000);	// 300000 miliseconds = 5 minutes, change this value to change update frequency
+		setTimeout(refresh_timer, pollperiodms );	// 
 		getData();
 	} // end function refresh_timer
 
@@ -434,6 +435,45 @@ function readRClabels() {
 
 } // end function readRClabel
 
+
+function getnewAPIKey()
+{
+    var un = sessionStorage.getItem("un");
+    var pw = sessionStorage.getItem("pw");
+    var serializedData = sessionStorage.getItem("sd");  
+//console.log("getnewAPIKey called for " + un);
+    var request;
+    
+    
+    var urlstring = "api_getnewkey.php"
+    //console.log(urlstring);  
+
+   
+    // post the data to the PHP page to lookup and return the user's accounts
+    request = $.ajax({
+        type: "POST",
+        url: urlstring,
+        data: serializedData
+        });	
+        
+        // callback handler that will be called on success
+        request.done(function (response, textStatus, jqXHR){
+        // log a message to the console
+// console.log("data received = " + response);
+        parseXml(response);
+    });
+
+    // callback handler that will be called on failure
+    request.fail(function (jqXHR, textStatus, errorThrown){
+        // log the error to the console
+//console.error("The following error occured: "+textStatus, errorThrown);
+    });
+
+                        
+} // end function getnewAPIKey
+
+
+
 // function to load the result codes into an array
 function parseRCXml(xml) {
 
@@ -496,7 +536,8 @@ function parseXml(xml) {
 	var monitoringON = "";
 
 	var now = new Date();
-	
+	var lastsuccessfullpolltime = "Last successful poll time: " + now;
+    var lastunsuccessfullpolltime = "";
 	obstext = "Last poll time: " + now;
 	// empty the table contents ready for the updated ones
 	$("#table#table tbody").empty();
@@ -517,14 +558,31 @@ function parseXml(xml) {
 			{
 				activeled_ss.blink(true);
 				activeled_ss.setLedColor(steelseries.LedColor.GREEN_LED);
-				obstext = obstext + "; Polling every 5 minutes";
+                var pollmins = (pollperiodms/60000);
+                if(pollmins == 1)
+                    pollmins = pollmins + " minute";
+                else
+                    pollmins = pollmins + " minutes";
+				obstext = obstext + "; Polling every " + pollmins;
 			}
 			else
 			{
-				obstext = obstext + "; Polling stopped - no connection to NCC Group API Service";	
+				obstext = obstext + "; Polling stopped - no connection to NCC Group API Service";
+                lastunsuccessfullpolltime = "Last unsuccessful poll time: " + now;	
 			}
-			
-	});
+console.log ("Response Status: "  + responseStatus  + "; code: " + responseCode + "; msg: " + responseMessage);
+            
+            
+            if (responseStatus.indexOf("Fail") > -1)
+            {
+//console.log("getting new API key for next poll"); 
+               getnewAPIKey();
+
+	        } // end if response is a fail
+                
+                
+                        
+	}); // end $xml find response
 	
 
 	
@@ -777,6 +835,7 @@ function parseXml(xml) {
 	{
 		// turn led off and stop flashing
 		errorled_ss.blink(false);
+        errorled_ss.setLedOnOff(false);
 		//errorled_ss.setLedColor(steelseries.LedColor.RED_LED); // reset
 		errorled_ss.resetLed;
 		errorled_ss.repaint;
